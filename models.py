@@ -50,7 +50,7 @@ class InjectionGenerator(nn.Module):
         super().__init__()
         self.fc = nn.Linear(z_dim + c_dim, 1024 * 4 * 4)
 
-        # condition inject layers (선택된 2개만)
+        # Inject the age condition at two generator stages.
         self.inject_c1 = nn.Linear(c_dim, 512)
         self.inject_c2 = nn.Linear(c_dim, 256)
 
@@ -118,13 +118,13 @@ class InjectionGenerator(nn.Module):
 class ConcatGenerator(nn.Module):
     def __init__(self, z_dim=128, c_dim=2, c_emb_dim=16):
         super().__init__()
-        self.c_emb = nn.Linear(c_dim, c_emb_dim)             # 🔹 2 → 16
+        self.c_emb = nn.Linear(c_dim, c_emb_dim)
         self.fc = nn.Linear(z_dim + c_emb_dim, 1024 * 4 * 4)  # z + c_emb
 
-        # 🔹 condition injection (block 2만)
+        # Inject the embedded condition at the second upsampling block.
         self.inject_c = nn.Linear(c_emb_dim, 256)
 
-        # 🔹 deconv blocks
+        # Upsampling blocks.
         self.net = nn.Sequential(
             nn.BatchNorm2d(1024),
             nn.ReLU(True),
@@ -167,7 +167,7 @@ class ConcatGenerator(nn.Module):
 
         # 🔹 Block 2: 8x8 → 16x16 + condition inject
         x = self.net[5](x)
-        x += self.inject_c(c_emb).view(-1, 256, 1, 1)  # 💡 단 한 번만 주입
+        x += self.inject_c(c_emb).view(-1, 256, 1, 1)
         x = self.net[6](x)
         x = self.net[7](x)
 
@@ -401,7 +401,7 @@ class VGGFeatureExtractor(nn.Module):
     def __init__(self):
         super().__init__()
         vgg = tv_models.vgg19(pretrained=True).features
-        self.slice = nn.Sequential(*list(vgg.children())[:36])  # conv5_2까지
+        self.slice = nn.Sequential(*list(vgg.children())[:36])  # Through conv5_2.
         for param in self.slice.parameters():
             param.requires_grad = False
 
@@ -410,13 +410,12 @@ class VGGFeatureExtractor(nn.Module):
 
 class TotalVariationLoss(nn.Module):
     """
-    Total Variation Loss: 이미지의 노이즈를 줄이고 더 자연스럽게 만들기 위해
-    인접한 픽셀 간의 차이를 최소화합니다.
+    Penalize differences between adjacent pixels to reduce image noise.
     """
     def __init__(self):
         super(TotalVariationLoss, self).__init__()
 
     def forward(self, img):
-        loss_h = torch.mean(torch.abs(img[:, :, 1:, :] - img[:, :, :-1, :]))  # height 차이
-        loss_w = torch.mean(torch.abs(img[:, :, :, 1:] - img[:, :, :, :-1]))  # width 차이
+        loss_h = torch.mean(torch.abs(img[:, :, 1:, :] - img[:, :, :-1, :]))
+        loss_w = torch.mean(torch.abs(img[:, :, :, 1:] - img[:, :, :, :-1]))
         return loss_h + loss_w
