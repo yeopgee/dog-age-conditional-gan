@@ -1,0 +1,14 @@
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+AFAC/
+checkpoints/
+results/
+runs/
+samples/
+data/
+*.pt
+*.pth
+*.ckpt
+*.zip
+*.tar.gz
