@@ -12,12 +12,11 @@ class AFACDataset(Dataset):
         self.label_map = {'Young': 0, 'Senior': 1}
         self.missing_files = []
 
-        # 1. 텍스트에서 레이블 불러오기
+        # Keep only labels with an image available on disk.
         with open(txt_path, 'r') as f:
             for line in f:
                 filename, label = line.strip().split('\t')
 
-                # 2. 이미지가 실제 존재하는지 확인
                 img_path = os.path.join(img_dir, filename)
                 if os.path.exists(img_path):
                     self.samples.append((filename, label))
