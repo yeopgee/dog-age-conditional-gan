@@ -1,30 +1,56 @@
-# Dog age transformation with a conditional GAN
+# Dog age transformation with an age-conditional GAN
 
-This repository organizes my contribution to the [KUBIG dog age transformation team project](https://github.com/KU-BIG/KUBIG_2025_FALL/tree/main/KUBIG%20CONTEST/CV_Team6). The project investigated whether a generator conditioned on dog age could produce images showing possible age-related appearance changes. It was a research prototype motivated by missing-dog searches, not a deployed identification tool.
+This repository documents my contribution to the [KUBIG dog age transformation team project](https://github.com/KU-BIG/KUBIG_2025_FALL/tree/main/KUBIG%20CONTEST/CV_Team6). We explored whether a model could transform a dog photograph to suggest an older appearance, motivated by searches for missing dogs. It is an experimental image-transformation project.
+
+## Motivation
+
+A conditional generator can create an image for a requested age category, but transforming a *particular* dog also requires reconstructing that dog's appearance. The project therefore combined an age-conditional GAN with an encoder and latent-vector optimization.
 
 ## My contribution
 
-- Led the team project and prepared age-class labels and AFAC image data for experiments.
-- Implemented and compared age-conditioned generator and discriminator variants, including condition injection and a projection discriminator.
-- Trained a conditional encoder and explored latent optimization to reconstruct an input image using pixelwise and VGG-based perceptual losses before changing its age condition.
+1. Prepared Young and Senior labels from the AFAC age annotations, excluding the ambiguous middle-age range for these experiments.
+2. Implemented and compared age-conditioned generator and discriminator variants, including condition injection and a projection discriminator.
+3. Trained an encoder to initialize the latent vector. Then optimized that vector to reconstruct an input photograph using pixelwise and VGG-based perceptual losses before changing the age condition.
 
-The [team README](https://github.com/KU-BIG/KUBIG_2025_FALL/blob/main/KUBIG%20CONTEST/CV_Team6/README.md) gives the broader team context and results. The code here comes from my working notebook. The experiments found that preserving identity and producing convincing age changes remained difficult.
+```text
+Input photo + source age
+        │
+        ▼
+Encoder → initial latent vector
+        │
+        ▼
+Latent optimization → reconstruction under source age
+        │
+        ▼
+Same latent vector + target age → transformed image
+```
 
-## Code map
+## Results
 
-| File | Purpose |
+The examples below show the original photograph, its reconstruction, and the output under the Senior condition.
+
+![First dog age-transformation example: original, reconstruction, transformed](assets/reconstruction-example-1.png)
+
+![Second dog age-transformation example: original, reconstruction, transformed](assets/reconstruction-example-2.png)
+
+*Examples from my KUBIG presentation. They illustrate the reconstruction and transformation pipeline, including its visible limitations.*
+
+## Discussion
+
+The experiments exposed a difficult tradeoff: changing the age condition often changed other aspects of the dog's appearance. Preserving identity and generating convincing age-related changes remained challenging, especially with noisy age labels and unstable GAN training. The [team README](https://github.com/KU-BIG/KUBIG_2025_FALL/blob/main/KUBIG%20CONTEST/CV_Team6/README.md) describes the broader project and other variants.
+
+## Code and usage
+
+| File | Role |
 | --- | --- |
-| `prepare_labels.py` | Convert age-in-months annotations to young/senior labels |
-| `data.py` | Load labeled AFAC images |
-| `models.py` | Generator, discriminator, encoder, and perceptual model variants |
-| `train_gan.py` | Train the condition-injected generator and projection discriminator |
-| `train_encoder.py` | Train an image-to-latent encoder on synthetic generator outputs |
-| `reconstruct.py` | Optimize a latent code and generate reconstructed/age-switched images |
-| `notebooks/dog_age_cgan.ipynb` | Cleaned original research notebook, including exploratory variants |
+| [`prepare_labels.py`](prepare_labels.py) | Convert age annotations to two classes |
+| [`models.py`](models.py) | Generator, discriminator, encoder, and perceptual features |
+| [`train_gan.py`](train_gan.py) | Train the conditional GAN |
+| [`train_encoder.py`](train_encoder.py) | Train the latent initializer |
+| [`reconstruct.py`](reconstruct.py) | Optimize a latent vector and render age-conditioned output |
+| [`notebooks/dog_age_cgan.ipynb`](notebooks/dog_age_cgan.ipynb) | Exploratory experiments and model variants |
 
-## Run the stages
-
-Install the packages in `requirements.txt` and provide the AFAC images and annotations separately:
+With the AFAC data available and dependencies installed from [`requirements.txt`](requirements.txt), the stages are:
 
 ```bash
 python prepare_labels.py --annotations DATA/train.txt --images DATA/trainset --output work/AFAC.txt
@@ -33,4 +59,4 @@ python train_encoder.py --generator-checkpoint runs/injected/G_epoch_300.pth --o
 python reconstruct.py --image DATA/example.jpg --source-age young --generator-checkpoint runs/injected/G_epoch_300.pth --encoder-checkpoint checkpoints/E_best.pth --output-dir results
 ```
 
-GAN training and latent optimization are computationally expensive. Dataset images, personal dog photographs, trained weights, and generated outputs are omitted. The scripts separate the main stages; the notebook preserves the experimental sequence and alternative architectures.
+The dataset and trained weights are not redistributed in this repository.
