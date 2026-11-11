@@ -64,7 +64,7 @@ The examples below show the original photograph, its reconstruction, and the out
 | --- | --- |
 | [`prepare_labels.py`](prepare_labels.py) | Convert age annotations to two classes |
 | [`models.py`](models.py) | Generator, discriminator, encoder, and perceptual features |
-| [`train_gan.py`](train_gan.py) | Train the conditional GAN |
+| [`train_gan.py`](train_gan.py) | Train either notebook GAN variant (`--variant injected` or `--variant concat`) |
 | [`train_encoder.py`](train_encoder.py) | Train the latent initializer on fixed synthetic pairs, as in the notebook |
 | [`reconstruct.py`](reconstruct.py) | Optimize a latent vector and render age-conditioned output |
 | [`notebooks/dog_age_cgan.ipynb`](notebooks/dog_age_cgan.ipynb) | Exploratory experiments and model variants |
