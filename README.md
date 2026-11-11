@@ -33,7 +33,7 @@ The examples below show the original photograph, its reconstruction, and the out
 
 ![Second dog age-transformation example: original, reconstruction, transformed](assets/reconstruction-example-2.png)
 
-*Examples from my KUBIG presentation: original photograph, reconstruction, and output under the Senior condition.*
+*Examples from my KUBIG presentation.*
 
 The model produced age-conditioned outputs, but the examples also show changes in the dog's appearance beyond age.
 
