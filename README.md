@@ -23,12 +23,12 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 ### 1. Generator
 
 - **Paper:** Supplies the age label when image generation begins.
-- **Our method:** Supplies age information again at intermediate stages of image generation.
+- **Our method:** Supplies age information again at later stages of image generation.
 
 ### 2. Discriminator
 
 - **Paper:** Broadcasts the age label across the image before processing it.
-- **Our method:** Uses a projection discriminator to compare features of the dog image with a learned representation of its age.
+- **Our method:** Uses a projection discriminator to compare leared features of the dog image with a representation of its age.
 
 ### 3. Encoder
 
