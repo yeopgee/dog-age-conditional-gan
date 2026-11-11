@@ -23,23 +23,22 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 ### 1. Generator
 
 - **Paper:** Supplies the age label when image generation begins.
-- **Our method:** Supplies age information again at intermediate stages of image generation.
+- **Our method:** Adds age information again during image generation.
 
 ### 2. Discriminator
 
-- **Paper:** Repeats (broadcasts) the age label across the image and passes it to the discriminator's first layer.
-- **Our method:** First extracts visual features from the dog image, then uses a projection discriminator to assess whether they match the age label.
+- **Paper:** Broadcasts the age label across the image before processing it.
+- **Our method:** Uses a projection discriminator to compare features of the dog image with a learned representation of its age.
 
 ### 3. Encoder
 
-- **Paper:** Uses the face image to estimate a starting latent vector.
-- **Our method:** Uses the dog photo and its source age to estimate a latent vector for reconstruction. The generator later uses that vector with a target age to transform the photo.
+- **Paper:** Uses the face image to estimate a latent vector.
+- **Our method:** Uses the dog photo and its source age to estimate a latent vector.
 
 ### 4. Latent-vector optimization
 
-- **Paper:** Uses FaceNet to preserve the person's identity in the reconstructed face.
+- **Paper:** Uses FaceNet to help preserve identity while refining the latent vector.
 - **Our method:** Uses pixel-level and VGG-based visual similarity to refine the latent vector before changing the age label.
-
 ## Results
 
 The examples below show the original photograph, its reconstruction, and the output under the Senior condition.
