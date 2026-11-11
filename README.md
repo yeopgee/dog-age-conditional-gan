@@ -1,16 +1,16 @@
 # Dog age transformation with an age-conditional GAN
 
-This repository documents my contribution to the [KUBIG dog age transformation team project](https://github.com/KU-BIG/KUBIG_2025_FALL/tree/main/KUBIG%20CONTEST/CV_Team6). We explored whether a model could transform a dog photograph to suggest an older appearance, motivated by searches for missing dogs. It is an experimental image-transformation project.
+This repository contains my age-conditional GAN experiments from the [KUBIG dog age transformation team project](https://github.com/KU-BIG/KUBIG_2025_FALL/tree/main/KUBIG%20CONTEST/CV_Team6). For more information about the project, see the team repository.
 
 ## Motivation
 
-A conditional generator can create an image for a requested age category, but transforming a *particular* dog also requires reconstructing that dog's appearance. The project therefore combined an age-conditional GAN with an encoder and latent-vector optimization.
+The goal was to show how a missing dog might look as it aged. This requires changing the apparent age of a photograph while preserving the individual dog's appearance.
 
 ## My contribution
 
-1. Prepared Young and Senior labels from the AFAC age annotations, excluding the ambiguous middle-age range for these experiments.
-2. Implemented and compared age-conditioned generator and discriminator variants, including condition injection and a projection discriminator.
-3. Trained an encoder to initialize the latent vector. Then optimized that vector to reconstruct an input photograph using pixelwise and VGG-based perceptual losses before changing the age condition.
+- Prepared Young and Senior labels from AFAC age annotations, excluding the middle-age range for these experiments.
+- Implemented age-conditioned generator and discriminator variants, including condition injection and a projection discriminator.
+- Trained an encoder to initialize the latent vector, then optimized that vector with pixelwise and VGG-based perceptual losses to reconstruct the input before changing the age condition.
 
 ```text
 Input photo + source age
@@ -33,13 +33,15 @@ The examples below show the original photograph, its reconstruction, and the out
 
 ![Second dog age-transformation example: original, reconstruction, transformed](assets/reconstruction-example-2.png)
 
-*Examples from my KUBIG presentation. They illustrate the reconstruction and transformation pipeline, including its visible limitations.*
+*Examples from my KUBIG presentation: original photograph, reconstruction, and output under the Senior condition.*
+
+The model produced age-conditioned outputs, but the examples also show changes in the dog's appearance beyond age.
 
 ## Discussion
 
-The experiments exposed a difficult tradeoff: changing the age condition often changed other aspects of the dog's appearance. Preserving identity and generating convincing age-related changes remained challenging, especially with noisy age labels and unstable GAN training. The [team README](https://github.com/KU-BIG/KUBIG_2025_FALL/blob/main/KUBIG%20CONTEST/CV_Team6/README.md) describes the broader project and other variants.
+The main challenge was preserving the dog's identity while changing only its apparent age. Noisy age labels and variation in breed, pose, and background made that separation difficult.
 
-## Code and usage
+## Code structure
 
 | File | Role |
 | --- | --- |
@@ -49,14 +51,3 @@ The experiments exposed a difficult tradeoff: changing the age condition often c
 | [`train_encoder.py`](train_encoder.py) | Train the latent initializer |
 | [`reconstruct.py`](reconstruct.py) | Optimize a latent vector and render age-conditioned output |
 | [`notebooks/dog_age_cgan.ipynb`](notebooks/dog_age_cgan.ipynb) | Exploratory experiments and model variants |
-
-With the AFAC data available and dependencies installed from [`requirements.txt`](requirements.txt), the stages are:
-
-```bash
-python prepare_labels.py --annotations DATA/train.txt --images DATA/trainset --output work/AFAC.txt
-python train_gan.py --labels work/AFAC.txt --images DATA/trainset --output-dir runs/injected
-python train_encoder.py --generator-checkpoint runs/injected/G_epoch_300.pth --output checkpoints/E_best.pth
-python reconstruct.py --image DATA/example.jpg --source-age young --generator-checkpoint runs/injected/G_epoch_300.pth --encoder-checkpoint checkpoints/E_best.pth --output-dir results
-```
-
-The dataset and trained weights are not redistributed in this repository.
