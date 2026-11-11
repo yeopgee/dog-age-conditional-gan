@@ -38,7 +38,7 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 ### 4. Latent-vector optimization
 
 - **Paper:** Uses a FaceNet identity loss to optimize the latent vector.
-- **Our method:** I used pixelwise and VGG-feature perceptual losses to reconstruct the dog before changing the age condition.
+- **Our method:** I used pixelwise and VGG-feature perceptual losses to construct the latent vector.
 
 ## Results
 
