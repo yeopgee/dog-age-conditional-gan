@@ -6,23 +6,26 @@ This repository contains my age-conditional GAN experiments from the [KUBIG dog 
 
 The goal was to show how a missing dog might look as it aged. This requires changing the apparent age of a photograph while preserving the individual dog's appearance.
 
+## Data
+
+- [DogAge](https://tianchi.aliyun.com/dataset/215529) ([original challenge](https://e-nns.org/icann2019/conference-programme/competitions/)): dog images grouped by age.
+- [AFAC 2023 pet-age recognition dataset](https://aistudio.baidu.com/datasetdetail/225418/0): age annotations used to prepare the Young and Senior conditions.
+
 ## My contribution
 
 - Prepared Young and Senior labels from AFAC age annotations, excluding the middle-age range for these experiments.
 - Implemented age-conditioned generator and discriminator variants, including condition injection and a projection discriminator.
 - Trained an encoder to initialize the latent vector, then optimized that vector with pixelwise and VGG-based perceptual losses to reconstruct the input before changing the age condition.
 
-```text
-Input photo + source age
-        │
-        ▼
-Encoder → initial latent vector
-        │
-        ▼
-Latent optimization → reconstruction under source age
-        │
-        ▼
-Same latent vector + target age → transformed image
+```mermaid
+flowchart LR
+    A["Input photo<br/>+ source age"] --> B["Encoder"]
+    B --> C["Initial latent vector"]
+    C --> D["Latent optimization<br/>under source age"]
+    A --> D
+    D --> E["Reconstructed photo"]
+    D --> F["Optimized latent vector<br/>+ target age"]
+    F --> G["Age-transformed photo"]
 ```
 
 ## Results
@@ -33,13 +36,17 @@ The examples below show the original photograph, its reconstruction, and the out
 
 ![Second dog age-transformation example: original, reconstruction, transformed](assets/reconstruction-example-2.png)
 
+![Third dog age-transformation example: original, reconstruction, transformed](assets/reconstruction-example-3.png)
+
 *Examples from my KUBIG presentation.*
 
 The model produced age-conditioned outputs, but the examples also show changes in the dog's appearance beyond age.
 
 ## Discussion
 
-The main challenge was preserving the dog's identity while changing only its apparent age. Noisy age labels and variation in breed, pose, and background made that separation difficult.
+- **Model:** GAN training can be unstable and susceptible to mode collapse; its image quality can lag behind diffusion-based methods.
+- **Data:** Unlike the roughly 120,000 mostly frontal human faces used in Age-cGAN, the dog photos varied in breed, pose, appearance, and background, with only about 16,000 small-dog images available.
+- **Age condition:** Dogs show fewer obvious aging cues than people, so changing the age condition often had a limited visible effect.
 
 ## Code structure
 
