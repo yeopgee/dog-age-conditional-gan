@@ -23,7 +23,7 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 ### 1. Generator
 
 - **Paper:** Supplies the age label when image generation begins.
-- **Our method:** Adds age information again during image generation.
+- **Our method:** Supplies age information again at intermediate stages of image generation.
 
 ### 2. Discriminator
 
@@ -37,8 +37,9 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 
 ### 4. Latent-vector optimization
 
-- **Paper:** Uses FaceNet to help preserve identity while refining the latent vector.
+- **Paper:** Uses trained classifier FaceNet to help preserve identity while refining the latent vector.
 - **Our method:** Uses pixel-level and VGG-based visual similarity to refine the latent vector before changing the age label.
+  
 ## Results
 
 The examples below show the original photograph, its reconstruction, and the output under the Senior condition.
