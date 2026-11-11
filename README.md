@@ -8,7 +8,7 @@ The goal was to show how a missing dog might look as it aged. This requires chan
 
 ## Data
 
-- [AFAC 2023 pet-age recognition dataset](https://aistudio.baidu.com/datasetdetail/225418/0): age annotations used to prepare the Young and Senior conditions.
+- [AFAC 2023 pet-age recognition dataset](https://aistudio.baidu.com/datasetdetail/225418/0): Used age annotations to lablel the young and senior conditions.
 
 ## My contribution
 
