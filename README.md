@@ -33,7 +33,7 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 ### 3. Encoder
 
 - **Paper:** Uses the face image to estimate a starting latent vector.
-- **Our method:** First extracts features from the dog image, then combines them with age information to estimate the latent vector.
+- **Our method:** Uses the dog photo and its source age to estimate a latent vector for reconstruction. The generator later uses that vector with a target age to transform the photo.
 
 ### 4. Latent-vector optimization
 
