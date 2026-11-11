@@ -40,8 +40,6 @@ The examples below show the original photograph, its reconstruction, and the out
 
 *Examples from my KUBIG presentation.*
 
-The model produced age-conditioned outputs, but the examples also show changes in the dog's appearance beyond age.
-
 ## Discussion
 
 - **Model:** GAN training can be unstable and susceptible to mode collapse; its image quality can lag behind diffusion-based methods.
