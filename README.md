@@ -39,7 +39,7 @@ The examples below show the original photograph, its reconstruction, and the out
 
 *Examples from my KUBIG presentation.*
 
-## Discussion
+## Limitations
 
 - **Model:** GAN training can be unstable and susceptible to mode collapse; its image quality can lag behind diffusion-based methods.
 - **Data:** Unlike the roughly 120,000 mostly frontal human faces used in Age-cGAN, the dog photos varied in breed, pose, appearance, and background, with only about 16,000 small-dog images available.
