@@ -8,7 +8,6 @@ The goal was to show how a missing dog might look as it aged. This requires chan
 
 ## Data
 
-- [DogAge](https://tianchi.aliyun.com/dataset/215529) ([original challenge](https://e-nns.org/icann2019/conference-programme/competitions/)): dog images grouped by age.
 - [AFAC 2023 pet-age recognition dataset](https://aistudio.baidu.com/datasetdetail/225418/0): age annotations used to prepare the Young and Senior conditions.
 
 ## My contribution
