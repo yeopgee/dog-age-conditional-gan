@@ -27,7 +27,7 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 
 ### 2. Discriminator
 
-- **Paper:** Broadcasts the age label across spatial positions and gives it to the first convolutional layer.
+- **Paper:** Repeats (broadcasts) the age label across the image and passes it to the discriminator's first layer.
 - **Our method:** First extracts visual features from the dog image, then uses a projection discriminator to assess whether they match the age label.
 
 ### 3. Encoder
