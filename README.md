@@ -32,8 +32,8 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 
 ### 3. Encoder
 
-- **Paper:** The encoder estimates an initial latent vector from the face image, E(x). The age condition is supplied separately to the generator.
-- **Our method:** We first tried concatenating a spatial age map with the dog image before encoding, but this version was unstable. I then extracted image features with convolutions and concatenated a learned age embedding before the final fully connected layer.
+- **Paper:** The encoder estimates z₀ = E(x) from the face image; age enters the generator separately.
+- **Our method:** I replaced an unstable spatial age-map input with an age embedding concatenated to convolutional image features before the final fully connected layer.
 
 ### 4. Latent-vector optimization
 
