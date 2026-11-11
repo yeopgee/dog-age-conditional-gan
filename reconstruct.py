@@ -37,9 +37,13 @@ def main():
     encoder.eval().requires_grad_(False)
     perceptual = VGGFeatureExtractor().to(device)
     perceptual.eval().requires_grad_(False)
+    # Preserve the notebook's VGG normalization for both the input and the
+    # reconstruction when computing the perceptual loss.
+    vgg_normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                         std=[0.229, 0.224, 0.225])
     with torch.no_grad():
         initial_z = encoder(image, condition)
-        target_features = perceptual((image + 1) / 2)
+        target_features = perceptual(vgg_normalize(image))
     z = initial_z.detach().clone().requires_grad_(True)
     optimizer = torch.optim.Adam([z], lr=0.01)
     best = float('inf')
@@ -48,7 +52,7 @@ def main():
         optimizer.zero_grad(set_to_none=True)
         reconstruction = generator(z, condition)
         pixel_loss = F.mse_loss(reconstruction, image)
-        feature_loss = F.l1_loss(perceptual((reconstruction + 1) / 2), target_features)
+        feature_loss = F.l1_loss(perceptual(vgg_normalize(reconstruction)), target_features)
         loss = pixel_loss + 0.05 * feature_loss
         loss.backward()
         optimizer.step()
