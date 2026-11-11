@@ -31,13 +31,14 @@ def main():
     parser.add_argument('--epochs', type=int, default=300)
     parser.add_argument('--batch-size', type=int, default=64)
     parser.add_argument('--save-every', type=int, default=10)
+    parser.add_argument('--num-workers', type=int, default=4)
     args = parser.parse_args()
     output = Path(args.output_dir)
     output.mkdir(parents=True, exist_ok=True)
     transform = transforms.Compose([transforms.Resize((128, 128)), transforms.ToTensor(),
                                     transforms.Normalize((0.5,) * 3, (0.5,) * 3)])
     loader = DataLoader(AFACDataset(args.labels, args.images, transform=transform),
-                        batch_size=args.batch_size, shuffle=True, num_workers=0)
+                        batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     generator = InjectionGenerator(z_dim=128, c_dim=2).to(device)
     discriminator = ProjectionDiscriminator(c_dim=2).to(device)
@@ -56,6 +57,7 @@ def main():
             fake = generator(z, condition)
 
             d_opt.zero_grad(set_to_none=True)
+            # Hinge losses for real images and age-conditioned fake images.
             d_loss = F.relu(1 - discriminator(real, labels)).mean() + \
                      F.relu(1 + discriminator(fake.detach(), fake_labels)).mean()
             d_loss.backward()
@@ -68,7 +70,13 @@ def main():
         scheduler.step()
         print(f'Epoch {epoch}: D={d_loss.item():.4f}, G={g_loss.item():.4f}')
         if epoch % args.save_every == 0:
-            torch.save({'epoch': epoch, 'G_state_dict': generator.state_dict()}, output / f'G_epoch_{epoch:03d}.pth')
+            # Keep the generator state and training metadata saved by the notebook.
+            torch.save({'epoch': epoch, 'G_state_dict': generator.state_dict(),
+                        'optimizer_G_state_dict': g_opt.state_dict(),
+                        'g_loss': g_loss.item(),
+                        'z_sample': z[:20].detach().cpu(),
+                        'c_sample': fake_labels[:20].detach().cpu()},
+                       output / f'G_epoch_{epoch:03d}.pth')
             with torch.no_grad():
                 young = generator(fixed_z, torch.tensor([[1., 0.]], device=device).repeat(len(fixed_z), 1))
                 senior = generator(fixed_z, torch.tensor([[0., 1.]], device=device).repeat(len(fixed_z), 1))
