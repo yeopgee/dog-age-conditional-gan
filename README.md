@@ -22,23 +22,23 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 
 ### 1. Generator
 
-- **Paper:** Conditions the generator at its input.
-- **Our method:** I embedded the age condition and injected it into intermediate features.
+- **Paper:** Supplies the age label when image generation begins.
+- **Our method:** Supplies age information again at intermediate stages of image generation.
 
 ### 2. Discriminator
 
-- **Paper:** Gives the age label to the discriminator at its first convolutional layer.
-- **Our method:** Our first version repeated the age label across the image; it overfit to age and showed mode collapse. I then tested a projection discriminator and a version that concatenates an age embedding after extracting image features.
+- **Paper:** Broadcasts the age label across spatial positions and gives it to the first convolutional layer.
+- **Our method:** First extracts visual features from the dog image, then uses a projection discriminator to assess whether they match the age label.
 
 ### 3. Encoder
 
-- **Paper:** Uses the face image to estimate a latent vector; the generator receives age separately.
-- **Our method:** We first repeated the age label across the dog image, but training was unstable. I instead extracted image features first, then concatenated an age embedding before predicting the latent vector.
+- **Paper:** Uses the face image to estimate a starting latent vector.
+- **Our method:** First extracts features from the dog image, then combines them with age information to estimate the latent vector.
 
 ### 4. Latent-vector optimization
 
-- **Paper:** Uses a FaceNet identity loss to optimize the latent vector.
-- **Our method:** I used pixelwise and VGG-feature perceptual losses to construct the latent vector.
+- **Paper:** Uses FaceNet to preserve the person's identity in the reconstructed face.
+- **Our method:** Uses pixel-level and VGG-based visual similarity to refine the latent vector before changing the age label.
 
 ## Results
 
