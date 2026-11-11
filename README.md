@@ -8,7 +8,7 @@ The goal was to show how a missing dog might look as it aged. This requires chan
 
 ## Data
 
-- [AFAC 2023 pet-age recognition dataset](https://aistudio.baidu.com/datasetdetail/225418/0): Used age annotations to lablel the young and senior conditions.
+- [AFAC 2023 pet-age recognition dataset](https://aistudio.baidu.com/datasetdetail/225418/0): Used age annotations to label the young and senior conditions.
 
 ## My contribution
 
@@ -28,7 +28,7 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 ### 2. Discriminator
 
 - **Paper:** Broadcasts the age label across the image before processing it.
-- **Our method:** Uses a projection discriminator to compare leared features of the dog image with a representation of its age.
+- **Our method:** Uses a projection discriminator to compare learned features of the dog image with a representation of its age.
 
 ### 3. Encoder
 
@@ -65,6 +65,6 @@ The examples below show the original photograph, its reconstruction, and the out
 | [`prepare_labels.py`](prepare_labels.py) | Convert age annotations to two classes |
 | [`models.py`](models.py) | Generator, discriminator, encoder, and perceptual features |
 | [`train_gan.py`](train_gan.py) | Train the conditional GAN |
-| [`train_encoder.py`](train_encoder.py) | Train the latent initializer |
+| [`train_encoder.py`](train_encoder.py) | Train the latent initializer on fixed synthetic pairs, as in the notebook |
 | [`reconstruct.py`](reconstruct.py) | Optimize a latent vector and render age-conditioned output |
 | [`notebooks/dog_age_cgan.ipynb`](notebooks/dog_age_cgan.ipynb) | Exploratory experiments and model variants |
