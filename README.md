@@ -27,13 +27,13 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 
 ### 2. Discriminator
 
-- **Paper:** Conditions the first convolutional layer.
-- **Our method:** An initial spatial age-concatenation version overfit and showed mode collapse. I then tested a projection discriminator and late concatenation of an age embedding with image features.
+- **Paper:** Gives the age label to the discriminator at its first convolutional layer.
+- **Our method:** Repeating the age label across the image made our first version overfit to age and collapse to similar outputs. I then tested a projection discriminator and a version that concatenates an age embedding after extracting image features.
 
 ### 3. Encoder
 
-- **Paper:** Estimates an initial latent vector as E(x); age enters the generator separately.
-- **Our method:** I replaced an unstable spatial age-map input with an age embedding concatenated to convolutional features before the final fully connected layer.
+- **Paper:** Uses the face image to estimate a latent vector; the generator receives age separately.
+- **Our method:** We first repeated the age label across the dog image, but training was unstable. I instead extracted image features first, then concatenated an age embedding before predicting the latent vector.
 
 ### 4. Latent-vector optimization
 
