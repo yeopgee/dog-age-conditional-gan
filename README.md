@@ -28,7 +28,7 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 ### 2. Discriminator
 
 - **Paper:** Gives the age label to the discriminator at its first convolutional layer.
-- **Our method:** Repeating the age label across the image made our first version overfit to age and collapse to similar outputs. I then tested a projection discriminator and a version that concatenates an age embedding after extracting image features.
+- **Our method:** Our first version repeated the age label across the image; it overfit to age and showed mode collapse. I then tested a projection discriminator and a version that concatenates an age embedding after extracting image features.
 
 ### 3. Encoder
 
