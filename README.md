@@ -20,10 +20,25 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 
 *Figure 1 from [Antipov et al. (2017)](https://arxiv.org/html/1702.01983v2). The figure depicts face aging, not the modified dog model.*
 
-- **Generator:** The paper supplies age at the generator input. I embedded the age condition and injected it into intermediate features to strengthen its effect.
-- **Discriminator:** The paper conditions an early convolutional layer. In our initial implementation, spatially broadcasting the age condition was associated with overfitting and mode collapse. I tried both a projection discriminator and a variant that concatenated a learned age embedding with convolutional image features before the fully connected layer.
-- **Encoder:** Our initial version spatially concatenated age with the image and was unstable. I instead extracted image features with convolutions and concatenated a linear age embedding before the fully connected layer.
-- **Latent-vector optimization:** The paper uses a FaceNet-based identity loss. Because that face-recognition model does not apply to dogs, I optimized the latent vector with pixelwise and VGG-feature perceptual losses before switching to the target age.
+### 1. Generator
+
+- **Paper:** Age-cGAN adds the age condition at the generator input.
+- **Our method:** I embedded the age condition and injected it into intermediate generator features to make age control more effective.
+
+### 2. Discriminator
+
+- **Paper:** Age-cGAN injects the age condition at the first convolutional layer.
+- **Our method:** Our initial version broadcast the age condition across the image; it overfit to age and showed mode collapse. I then tested two alternatives: a projection discriminator and a discriminator that concatenates an age embedding with extracted image features before the fully connected layer.
+
+### 3. Encoder
+
+- **Paper:** An encoder maps the input face image to an initial latent vector.
+- **Our method:** Our first version spatially concatenated the age condition with the image but was unstable. I instead extracted image features with convolutions, then concatenated a linear age embedding before the fully connected layer.
+
+### 4. Latent-vector optimization
+
+- **Paper:** Age-cGAN optimizes the latent vector using a FaceNet-based identity loss to preserve the person's face.
+- **Our method:** FaceNet does not provide a suitable identity measure for dogs, so I optimized the latent vector using pixelwise reconstruction and VGG-feature perceptual losses before switching to the target age.
 
 ## Results
 
