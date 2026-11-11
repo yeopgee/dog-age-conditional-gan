@@ -22,23 +22,23 @@ I adapted the face-aging pipeline of [Antipov, Baccouche, and Dugelay's Age-cGAN
 
 ### 1. Generator
 
-- **Paper:** Age-cGAN adds the age condition at the generator input.
-- **Our method:** I embedded the age condition and injected it into intermediate generator features to make age control more effective.
+- **Paper:** Conditions the generator at its input.
+- **Our method:** I embedded the age condition and injected it into intermediate features.
 
 ### 2. Discriminator
 
-- **Paper:** Age-cGAN injects the age condition at the first convolutional layer.
-- **Our method:** Our initial version broadcast the age condition across the image; it overfit to age and showed mode collapse. I then tested two alternatives: a projection discriminator and a discriminator that concatenates an age embedding with extracted image features before the fully connected layer.
+- **Paper:** Conditions the first convolutional layer.
+- **Our method:** An initial spatial age-concatenation version overfit and showed mode collapse. I then tested a projection discriminator and late concatenation of an age embedding with image features.
 
 ### 3. Encoder
 
-- **Paper:** The encoder estimates z₀ = E(x) from the face image; age enters the generator separately.
-- **Our method:** I replaced an unstable spatial age-map input with an age embedding concatenated to convolutional image features before the final fully connected layer.
+- **Paper:** Estimates an initial latent vector as E(x); age enters the generator separately.
+- **Our method:** I replaced an unstable spatial age-map input with an age embedding concatenated to convolutional features before the final fully connected layer.
 
 ### 4. Latent-vector optimization
 
-- **Paper:** Age-cGAN optimizes the latent vector using a FaceNet-based identity loss to preserve the person's face.
-- **Our method:** FaceNet does not provide a suitable identity measure for dogs, so I optimized the latent vector using pixelwise reconstruction and VGG-feature perceptual losses before switching to the target age.
+- **Paper:** Uses a FaceNet identity loss to optimize the latent vector.
+- **Our method:** I used pixelwise and VGG-feature perceptual losses to reconstruct the dog before changing the age condition.
 
 ## Results
 
