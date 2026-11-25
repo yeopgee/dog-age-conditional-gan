@@ -401,7 +401,7 @@ class VGGFeatureExtractor(nn.Module):
     def __init__(self):
         super().__init__()
         vgg = tv_models.vgg19(pretrained=True).features
-        self.slice = nn.Sequential(*list(vgg.children())[:36])  # Through conv5_2.
+        self.slice = nn.Sequential(*list(vgg.children())[:36])  # Through relu5_4 (feature indices 0–35).
         for param in self.slice.parameters():
             param.requires_grad = False
 
