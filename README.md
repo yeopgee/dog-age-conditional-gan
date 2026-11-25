@@ -63,55 +63,8 @@ The examples below show the original photograph, its reconstruction, and the out
 | File | Role |
 | --- | --- |
 | [`prepare_labels.py`](prepare_labels.py) | Convert age annotations to two classes |
-| [`preprocess_images.py`](preprocess_images.py) | Crop and augment AFAC images once before training |
-| [`data.py`](data.py) | Load labeled images |
 | [`models.py`](models.py) | Generator, discriminator, encoder, and perceptual features |
 | [`train_gan.py`](train_gan.py) | Train either GAN variant (`--variant injected` or `--variant concat`) |
 | [`train_encoder.py`](train_encoder.py) | Train the latent initializer on fixed synthetic pairs |
 | [`reconstruct.py`](reconstruct.py) | Optimize a latent vector and render age-conditioned output |
 | [`notebooks/dog_age_cgan.ipynb`](notebooks/dog_age_cgan.ipynb) | Exploratory experiments and model variants |
-
-## Running the code
-
-Run commands from the repository root. Use a separate virtual environment:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-```
-
-For interactive exploration, install `requirements-notebook.txt` instead. The
-notebook now includes section headings linking each stage to its Python module.
-The Python scripts expose the main workflow; the notebook also preserves optional
-plots and alternative experiments. Datasets, checkpoints, and generated outputs
-are not committed.
-
-Obtain AFAC separately and place its original images and annotations under `AFAC/`.
-Run the image preparation step before training to follow the notebook's workflow:
-
-```bash
-python preprocess_images.py --input-dir AFAC/trainset --output-dir AFAC/preprocessed --seed 42
-python prepare_labels.py --annotations AFAC/annotations/train.txt --images AFAC/preprocessed --output AFAC/AFAC.txt
-python train_gan.py --labels AFAC/AFAC.txt --images AFAC/preprocessed --variant injected
-python train_encoder.py --generator-checkpoint runs/injected/G_epoch_250.pth
-python reconstruct.py --image path/to/dog.jpg --source-age young --generator-checkpoint runs/injected/G_epoch_250.pth --encoder-checkpoint checkpoints/encoder_concat/E_best.pth
-```
-
-`--variant concat` runs the separate concatenated-conditioning GAN experiment.
-Encoder training and reconstruction currently use the injected generator; supply
-a checkpoint from that variant. The baseline architecture remains available in
-`models.py` and the notebook.
-
-The preprocessing script uses the notebook's crop, color jitter, and horizontal
-flip while preserving image filenames so labels still match PNG inputs. The
-notebook converted PNG extensions to JPG. Encoder training retains fixed latent
-and age pairs but generates their images per batch to reduce memory use.
-Reconstruction retains the original VGG input normalization; it is an exploratory
-implementation, not a claim of validated identity-preserving age progression.
-
-Check Python/notebook syntax and shared definitions without starting training:
-
-```bash
-python checks/check_notebook.py
-```
